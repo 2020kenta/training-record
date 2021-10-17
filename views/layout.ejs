@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style type="text/css">
+        .contents {
+            display: flex;
+            flex-wrap: wrap;
+            width: 100%;
+        }
+
+        .item {
+            width: calc(100% / 10);
+            padding: 5px 5px;
+            text-align: center;
+            background-color: #eeeacb;
+            color: black;
+        }
+
+        .itemv {
+            width: calc(100% / 10);
+            /*padding: 5px 10px;*/
+            text-align: right;
+            background-color: #EEEEEE;
+            color: black;
+        }
+
+        .itemvl {
+            width: calc(100% / 2);
+            padding: 5px 5px;
+            text-align: left;
+            background-color: #EEEEEE;
+            color: black;
+        }
+        .search_button {
+            margin-left: 150px;
+            margin-top: 20px;
+        }
+        .tableth {
+            padding: 5px 5px;
+            text-align: left;
+            background-color: #eeeacb;
+            color: black;
+        }
+        .tabletd {
+            padding: 5px 5px;
+            text-align: right;
+            background-color: #EEEEEE;
+            color: black;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <a href="/">home</a>
+    </div>
+    <%- body %>
+
+    <script>
+        function check() {
+            if (window.confirm("本当に削除しますか?")) {
+                return true;
+            } else {
+                window.alert("キャンセルしました。");
+                return false;
+            }
+        }
+    </script>
+</body>
+</html>

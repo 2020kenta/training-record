@@ -1,0 +1,73 @@
+<h1>Training Record</h1>
+<form action="/record/edit" method="POST">
+    <div class="contents">
+        <div class="item">ID</div>
+        <div class="itemv"><%= record.trainee_id %></div>
+        <input type="hidden" name="trainee_id" value="<%= record.trainee_id %>">
+    </div>
+    <div class="contents">
+        <div class="item">課程</div>
+        <div class="itemv"><%= record.phase %></div>
+        <input type="hidden" name="phase" value="<%= record.phase %>">
+    </div>
+    <div>　</div>
+    <div class="contents">
+        <div class="item">DATE</div>
+        <div class="itemv">
+            <input type="date" name="date" value="<%= record.date %>"> 
+        </div>
+    </div>
+    <div class="contents">
+        <div class="item">Record No.</div>
+        <div class="itemv"><%= record.rec_id %></div>
+        <input type="hidden" name="rec_id" value="<%= record.rec_id %>">
+    </div>
+    <div>　</div>
+    <div class="contents">
+        <div class="item">INSTRUCTOR ID</div>
+        <div class="itemv"><%= record.inst_id %></div>
+        <input type="hidden" name="inst_id" value="<%= record.inst_id %>">
+    </div>
+    <div>　</div>
+    <div class="contents">
+        <div class="item">総合評価</div>
+        <div class="itemv">
+            <input type="number" name="g_grade" min="1" max="3" value="<%= record.g_grade %>">
+        </div>
+    </div>
+    <div>　</div>
+    <div class="contents">
+        <div class="item">操作技術</div>
+        <div class="itemv">
+            <input type="number" name="technical" min="1" max="3" value="<%= record.technical %>">
+        </div>
+        <div class="itemvl">
+            <textarea name="t_comment"  cols="50" rows="2">
+                <%= record.t_comment %>
+            </textarea>
+        </div>
+    </div>
+    <div class="contents">
+        <div class="item">知識</div>
+        <div class="itemv">
+            <input type="number" name="knowledge" min="1" max="3" value="<%= record.knowledge %>">
+        </div>
+        <div class="itemvl">
+            <textarea name="k_comment"  cols="50" rows="2">
+                <%= record.k_comment %>
+            </textarea>
+        </div>
+    </div>
+    <div class="contents">
+        <div class="item">CRM</div>
+        <div class="itemv">
+            <input type="number" name="crm" min="1" max="3" value="<%= record.crm %>">
+        </div>
+        <div class="itemvl">
+            <textarea name="c_comment"  cols="50" rows="2">
+                <%= record.c_comment %>
+            </textarea>
+        </div>
+    </div>
+    <button type="submit" name="id" value="<%= record._id %>">決定</button>
+</form>

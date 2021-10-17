@@ -1,0 +1,59 @@
+<h1>Training Record</h1>
+
+<div class="contents">
+    <div class="item">所属</div>
+    <div class="itemv"><%= trainee["group"] %></div>
+</div>
+<div class="contents">
+    <div class="item">ID</div>
+    <div class="itemv"><%= trainee["id"] %></div>
+</div>
+<div class="contents">
+    <div class="item">氏名</div>
+    <div class="itemv"><%= trainee["ksname"] + trainee["kgname"] %></div>
+</div>
+<div class="contents">
+    <div class="item">課程</div>
+    <div class="itemv"><%= detail["phase"] %></div>
+</div>
+<div>　</div>
+<div class="contents">
+    <div class="item">DATE</div>
+    <div class="itemv"><%= detail["date"] %></div>
+</div>
+<div class="contents">
+    <div class="item">Record No.</div>
+    <div class="itemv"><%= detail["rec_id"] %></div>
+</div>
+<div>　</div>
+<div class="contents">
+    <div class="item">INSTRUCTOR</div>
+    <div class="itemv"><%= instructor["ksname"] + instructor["kgname"] %></div>
+</div>
+<div>　</div>
+<div class="contents">
+    <div class="item">総合評価</div>
+    <div class="itemv"><%= detail["g_grade"] %></div>
+</div>
+<div>　</div>
+<div class="contents">
+    <div class="item">操作技術</div>
+    <div class="itemv"><%= detail["technical"] %></div>
+    <div class="itemvl"><%= detail["t_comment"] %></div>
+</div>
+<div class="contents">
+    <div class="item">知識</div>
+    <div class="itemv"><%= detail["knowledge"] %></div>
+    <div class="itemvl"><%= detail["k_comment"] %></div>
+</div>
+<div class="contents">
+    <div class="item">CRM</div>
+    <div class="itemv"><%= detail["crm"] %></div>
+    <div class="itemvl"><%= detail["c_comment"] %></div>
+</div>
+<form action="/record/edit" method="GET">
+    <button type="submit" name="id" value="<%= detail._id %>">編集</button>
+</form>
+<form action="/record/delete" method="POST" onsubmit="return check()">
+    <button type="submit" name="id" value="<%= detail._id %>">削除</button>
+</form>
