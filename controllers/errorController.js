@@ -8,7 +8,10 @@ exports.logErrors = (error, req, res, next) => {
 exports.respondNoResourceFound = (req, res) => {
     let errorCode = httpStatus.NOT_FOUND;
     res.status(errorCode);
-    res.send(`${errorCode} | The page does not exist!`);
+    let errorMessage = `${errorCode} | The page does not exist!`;
+    res.render("error", {
+        message: errorMessage
+    });
 }
 
 exports.respondInternalError = (error, req, res, next) => {
@@ -16,4 +19,8 @@ exports.respondInternalError = (error, req, res, next) => {
     console.log(`ERROR occurred: ${error.stack}`);
     res.status(errorCode);
     res.send(`${errorCode} | Sorry, our application is experiencing a problem!`);
+    let errorMessage =`${errorCode} | Sorry, our application is experiencing a problem!`;
+    res.render("error", {
+        message: errorMessage
+    });
 }

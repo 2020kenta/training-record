@@ -1,0 +1,50 @@
+<h1>新規ユーザー作成</h1>
+<form action="/create" method="POST">
+    <div class="contents">
+        <div class="item">メールアドレス</div>
+        <div class="itemv"><input type="text" name="email" required></div>
+    </div>
+    <div class="contents">
+        <div class="item">パスワード</div>
+        <div class="itemv"><input type="password" name="password" required></div>
+    </div>
+    <div class="contents">
+        <div class="item">ID</div>
+        <div class="itemv"><input type="text" name="id" required></div>
+    </div>
+    <div class="contents">
+        <div class="item">姓（漢字）</div>
+        <div class="itemv"><input type="text" name="ksname" required></div>
+    </div>
+    <div class="contents">
+        <div class="item">名（漢字）</div>
+        <div class="itemv"><input type="text" name="kgname" required></div>
+    </div>
+    <div class="contents">
+        <div class="item">姓（ローマ字）</div>
+        <div class="itemv"><input type="text" name="sname" required></div>
+    </div>
+    <div class="contents">
+        <div class="item">名（ローマ字）</div>
+        <div class="itemv"><input type="text" name="gname" required></div>
+    </div>
+    <div class="contents">
+        <div class="item">性別</div>
+        <div class="itemv">
+            <select name="sex">
+                <option value="male">男</option>
+                <option value="female">女</option>
+            </select>
+        </div>
+    </div>
+    <div class="contents">
+        <div class="item">Group</div>
+        <div class="itemv"><input type="text" name="group"></div>
+    </div>
+    <div class="contents">
+        <div class="item">誕生日</div>
+        <div class="itemv"><input type="date" name="birth"></div>
+    </div>
+
+    <button type="submit">登録</button>
+</form>

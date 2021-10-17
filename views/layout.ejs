@@ -54,8 +54,15 @@
     </style>
 </head>
 <body>
-    <div>
+    <div class="nav">
         <a href="/">home</a>
+        <% if(loggedIn) { %>
+            <span><%= currentUser.fullName() %>でログインしています</span>
+            <a href="/logout">ログアウト</a>
+        <%  } else { %>
+            <span>ログインしていません</span>
+            <a href="/login">ログイン</a>
+        <% } %>
     </div>
     <%- body %>
 

@@ -6,16 +6,21 @@ const methodOverride = require("method-override");
 const passport = require("passport");
 const cookieParser = require("cookie-parser");
 const expressSession = require("express-session");
+const connectFlash = require("connect-flash");
 
 //別ファイル
 const homeController = require("./controllers/homeController");
 const errorController = require("./controllers/errorController");
+const userController = require("./controllers/userController");
 const Record = require("./models/record");
 const Person = require("./models/person");
 
 //mongoDBの初期設定
 mongoose.connect(
-    "mongodb://mongo:27017/sample_db",
+    //Dockerの場合
+    //"mongodb://mongo:27017/sample_db",
+    //localの場合
+    "mongodb://localhost:27017/sample_db",
     {useNewUrlParser: true}
 ).then(() => console.log("MongoDB connected"))
  .catch(err => console.log(err));
@@ -39,8 +44,38 @@ app.use(express.json());
 //routerを使ってリクエストを処理
 app.use("/", router);
 
+//cookieとsession
+router.use(cookieParser("secretRecord2021"));
+router.use(expressSession({
+    secret: "secretRecord2021",
+    cookie: {
+        maxAge: 40000000
+    },
+    resave: false,
+    saveUninitialized: false
+}));
+router.use(connectFlash());
+
+//passportの初期設定
+router.use(passport.initialize());
+router.use(passport.session());
+passport.use(Person.createStrategy());
+passport.serializeUser(Person.serializeUser());
+passport.deserializeUser(Person.deserializeUser());
+
+//ログインしているかチェック
+router.use((req, res, next) => {
+    res.locals.loggedIn = req.isAuthenticated();
+    res.locals.currentUser = req.user;
+    next();
+});
 //各ページのルーティング
 router.get("/", homeController.getHome);
+router.get("/create", (req, res) => res.render("create"));
+router.post("/create", userController.create);
+router.get("/login", (req, res) => res.render("login"));
+router.post("/login", userController.authenticate);
+router.get("/logout", userController.logout);
 router.get("/summary", homeController.getSummary);
 router.get("/record", homeController.getRecord);
 router.get("/register", homeController.getRegister);
@@ -48,7 +83,6 @@ router.post("/register", homeController.postRegister);
 router.get("/record/edit", homeController.getEdit);
 router.post("/record/edit", homeController.postEdit);
 router.post("/record/delete", homeController.delete);
-
 
 //エラー処理
 app.use(errorController.respondNoResourceFound);
