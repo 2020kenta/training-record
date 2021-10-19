@@ -1,5 +1,6 @@
 const fs = require("fs");
 const Record = require("../models/record");
+const Person = require("../models/person");
 let persons = require("../public/persons.json");
 //トップページへのGEt
 exports.getHome = (req,res) => {
@@ -93,7 +94,8 @@ exports.postRegister = (req, res) => {
     newRecord.save((error,result) => {
         if(error) res.send(error);
         res.redirect(`/summary?id=${req.body.id}&phase=${req.body.phase}`);
-    })
+    });
+
 }
 
 exports.getEdit = (req, res) => {

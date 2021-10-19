@@ -69,6 +69,7 @@ router.use((req, res, next) => {
     res.locals.currentUser = req.user;
     next();
 });
+
 //各ページのルーティング
 router.get("/", homeController.getHome);
 router.get("/create", (req, res) => res.render("create"));
@@ -78,11 +79,11 @@ router.post("/login", userController.authenticate);
 router.get("/logout", userController.logout);
 router.get("/summary", homeController.getSummary);
 router.get("/record", homeController.getRecord);
-router.get("/register", homeController.getRegister);
-router.post("/register", homeController.postRegister);
-router.get("/record/edit", homeController.getEdit);
-router.post("/record/edit", homeController.postEdit);
-router.post("/record/delete", homeController.delete);
+router.get("/register", userController.isLoggedin, homeController.getRegister);
+router.post("/register", userController.isLoggedin, homeController.postRegister);
+router.get("/record/edit", userController.isLoggedin, homeController.getEdit);
+router.post("/record/edit", userController.isLoggedin, homeController.postEdit);
+router.post("/record/delete", userController.isLoggedin, homeController.delete);
 
 //エラー処理
 app.use(errorController.respondNoResourceFound);

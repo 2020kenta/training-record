@@ -38,4 +38,13 @@ exports.authenticate = passport.authenticate("local", {
 exports.logout = (req, res, next) => {
     req.logout();
     res.redirect("/");
+};
+
+//ログインしているかチェック、していなければログイン画面へ
+exports.isLoggedin = (req, res, next) => {
+    if (req.isAuthenticated()) {
+        next();
+    } else {
+        res.redirect("/login");
+    }
 }
