@@ -3,7 +3,7 @@ const passportLocalMongoose = require("passport-local-mongoose");
 
 const personSchema = mongoose.Schema({
     id: {
-        type: Number,
+        type: String,
         required: true,
         unique: true
     },
@@ -41,7 +41,7 @@ const personSchema = mongoose.Schema({
 });
 
 personSchema.plugin(passportLocalMongoose, {
-    usernameField: "email"
+    usernameField: "id"
 });
 
 personSchema.methods.fullName = function () {

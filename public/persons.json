@@ -18,7 +18,9 @@
         "group": "Admin",
         "birth": "1995-05-12"
     },
-    {   "id": "003",
+
+    {
+        "id": "003",
         "sname": "ITAKURA",
         "ksname":"板倉",
         "gname": "TOSHIHARU",
@@ -36,7 +38,8 @@
         "group": "HONDA",
         "birth": "1965-12-01"
     },
-    {   "id": "1001",
+    {   
+        "id": "1001",
         "sname": "SUZUKI",
         "ksname":"鈴木",
         "gname": "AI",

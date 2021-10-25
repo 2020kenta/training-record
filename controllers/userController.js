@@ -1,6 +1,33 @@
 const Person = require("../models/person");
 const passport = require("passport");
 
+exports.initialize = (req, res) => {
+    const data = require("../public/default.json");
+
+    const people = data.people;
+    const record = data.records;
+    
+    people.forEach((person, index, array) => {
+        let newUser = new Person({
+            id: person.id,
+            sname: person.sname,
+            ksname: person.ksname,
+            gname: person.gname,
+            kgname: person.kgname,
+            sex: person.sex,
+            group: person.group,
+            email: person.email,
+            birth: person.birth
+        });
+        Person.register(newUser, person.password, (error, user) => {
+            if (error) {
+                console.log(error);
+            }
+        });
+    });
+    res.send("初期化しました");
+}
+
 //新規ユーザー作成
 exports.create = (req, res, next) => {
     if(req.skip) next();

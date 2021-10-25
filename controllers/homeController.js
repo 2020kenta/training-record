@@ -1,7 +1,14 @@
-const fs = require("fs");
 const Record = require("../models/record");
 const Person = require("../models/person");
-let persons = require("../public/persons.json");
+const { set } = require("mongoose");
+const e = require("express");
+const { exec } = require("child_process");
+const { resolve } = require("path");
+const record = require("../models/record");
+
+//実験用関数
+exports.testFunction = (req, res, next) => {
+}
 //トップページへのGEt
 exports.getHome = (req,res) => {
     res.render("index");
@@ -11,34 +18,46 @@ exports.getHome = (req,res) => {
 exports.getSummary = (req, res) => {
     //フォームデータを取得
     let formData = req.query;
+    let trainee, records;
 
     //リクエストに沿った個人データを検索
-    let person = persons.find( (element) => {
-        return (element["id"] === formData.id);
-    });
-
-    Record.find({trainee_id: person["id"], phase: formData.phase})
-        .then((r) => {
+    Person.findOne({id: formData.id})
+    .then(person => {
+        trainee = person;
+    })
+    .then(r => {
+        Record.find({trainee: trainee, phase: formData.phase})
+        .then(r => {
+            records = r;
+        })
+        .then(() => {
+            //データを新規作成する時のために次の番号を決めておく
             let newNumber;
-            if (r.length > 0) {
-                newNumber = r[r.length-1].rec_id - 0 + 1;
+            if (records.length > 0) {
+                newNumber = records[records.length-1].rec_id - 0 + 1;
             } else {
                 newNumber = 1;
             }
             res.render("summary", {
-                group: person["group"],
-                id: person["id"],
-                kname: person["ksname"] + person["kgname"],
+                group: trainee.group,
+                id: trainee.id,
+                kname: trainee.fullName(),
                 phase: formData.phase,
-                record: r,
+                record: records,
                 newNumber: newNumber
             });
         })
-        .catch((error) => {
-            res.send(error);
+        .catch(err => {
+            res.render("error", {
+                message: err
+            });
         });
-    
-
+    })
+    .catch(err => {
+        res.render("error", {
+            message: err
+        });
+    });
 }
 
 exports.getRecord = (req, res) => {
@@ -46,21 +65,11 @@ exports.getRecord = (req, res) => {
         return (element["trainee_id"] === formData.id && element["phase"] === formData.phase && element["rec_id"] === formData.rec_id);
     }) */
     Record.findById(req.query.id)
+        .populate("trainee")
+        .populate("instructor")
         .then(record => {
-            let trainee;
-            let instructor;
-            for (let i = 0; i < persons.length; i++) {
-                if (persons[i]["id"] === record.trainee_id) {
-                trainee = persons[i];
-                }
-                if (persons[i]["id"] === record.inst_id){
-                instructor = persons[i];
-                }
-            }
             res.render("record", {
-                detail: record,
-                trainee: trainee,
-                instructor: instructor
+                record: record,
             });
         })
         .catch(error => {
@@ -77,25 +86,45 @@ exports.getRegister = (req, res) => {
 };
 
 exports.postRegister = (req, res) => {
-    let newRecord = new Record({
-        trainee_id: req.body.id,
-        phase: req.body.phase,
-        rec_id: req.body.rec_id - 0,
-        date: req.body.date,
-        inst_id: req.body.inst_id,
-        g_grade: req.body.g_grade,
-        technical: req.body.technical,
-        knowledge: req.body.knowledge,
-        crm: req.body.crm,
-        t_comment: req.body.t_comment,
-        k_comment: req.body.k_comment,
-        c_comment: req.body.c_comment
-    });
-    newRecord.save((error,result) => {
-        if(error) res.send(error);
+    let trainee, instructor;
+    Promise.all([
+        Person.findOne({id: req.body.id})
+        .then(person => {
+            trainee = person
+        }),
+        Person.findOne({id: req.body.inst_id})
+        .then(person => {
+            instructor = person
+        })
+    ])
+    .then(() => {
+        Record.create({
+            trainee_id: req.body.id,
+            phase: req.body.phase,
+            rec_id: req.body.rec_id - 0,
+            date: req.body.date,
+            inst_id: req.body.inst_id,
+            g_grade: req.body.g_grade,
+            technical: req.body.technical,
+            knowledge: req.body.knowledge,
+            crm: req.body.crm,
+            t_comment: req.body.t_comment,
+            k_comment: req.body.k_comment,
+            c_comment: req.body.c_comment,
+            trainee: trainee,
+            instructor: instructor
+        });
+    })
+    .catch( err => {
+        console.log(err);
+        newRecord.save((error,result) => {
+            if(error) res.send(error);
+        })
+    })
+    .then(() => {
         res.redirect(`/summary?id=${req.body.id}&phase=${req.body.phase}`);
     });
-
+    
 }
 
 exports.getEdit = (req, res) => {

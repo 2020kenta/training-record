@@ -2,7 +2,6 @@
 const express = require("express");
 const layouts = require("express-ejs-layouts");
 const mongoose = require("mongoose");
-const methodOverride = require("method-override");
 const passport = require("passport");
 const cookieParser = require("cookie-parser");
 const expressSession = require("express-session");
@@ -72,6 +71,7 @@ router.use((req, res, next) => {
 
 //各ページのルーティング
 router.get("/", homeController.getHome);
+router.get("/test", homeController.testFunction);
 router.get("/create", (req, res) => res.render("create"));
 router.post("/create", userController.create);
 router.get("/login", (req, res) => res.render("login"));
@@ -79,11 +79,13 @@ router.post("/login", userController.authenticate);
 router.get("/logout", userController.logout);
 router.get("/summary", homeController.getSummary);
 router.get("/record", homeController.getRecord);
-router.get("/register", userController.isLoggedin, homeController.getRegister);
-router.post("/register", userController.isLoggedin, homeController.postRegister);
+router.get("/register",  homeController.getRegister);
+router.post("/register", homeController.postRegister);
 router.get("/record/edit", userController.isLoggedin, homeController.getEdit);
 router.post("/record/edit", userController.isLoggedin, homeController.postEdit);
 router.post("/record/delete", userController.isLoggedin, homeController.delete);
+
+router.get("/initialize", userController.initialize);
 
 //エラー処理
 app.use(errorController.respondNoResourceFound);

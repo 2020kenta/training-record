@@ -21,7 +21,13 @@ const recordSchema = mongoose.Schema({
     crm: String,
     t_comment: String,
     k_comment: String,
-    c_comment: String
+    c_comment: String,
+    trainee: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Person",
+        required: true
+    },
+    instructor: {type: mongoose.Schema.Types.ObjectId, ref: "Person"}
 });
 
 module.exports = mongoose.model("Record", recordSchema);
