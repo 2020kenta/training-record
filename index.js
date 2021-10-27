@@ -71,7 +71,7 @@ router.use((req, res, next) => {
 //各ページのルーティング
 router.get("/", homeController.getHome);
 router.get("/test", homeController.testFunction);
-router.get("/create", (req, res) => res.render("create"));
+router.get("/create", userController.isAdmin, (req, res) => res.render("create"));
 router.post("/create", userController.create);
 router.get("/login", (req, res) => res.render("login"));
 router.post("/login", userController.authenticate);

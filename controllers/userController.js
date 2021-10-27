@@ -75,3 +75,15 @@ exports.isLoggedin = (req, res, next) => {
         res.redirect("/login");
     }
 }
+
+exports.isAdmin= (req, res, next) => {
+    if (req.isAuthenticated()) {
+        if (req.user.group === "Admin") {
+            next();
+        } else {
+            res.redirect("/login");
+        }
+    } else {
+        res.redirect("/login");
+    }
+}
