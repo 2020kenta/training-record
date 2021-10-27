@@ -16,10 +16,9 @@ const Person = require("./models/person");
 
 //mongoDBの初期設定
 mongoose.connect(
-    //Dockerの場合
-    //"mongodb://mongo:27017/sample_db",
+    "mongodb+srv://dozono:0512kenta20@cluster0.uyhrf.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
     //localの場合
-    "mongodb://localhost:27017/sample_db",
+    //"mongodb://localhost:27017/sample_db",
     {useNewUrlParser: true}
 ).then(() => console.log("MongoDB connected"))
  .catch(err => console.log(err));
