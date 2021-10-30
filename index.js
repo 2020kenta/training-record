@@ -69,22 +69,27 @@ router.use((req, res, next) => {
 });
 
 //各ページのルーティング
+//トップページ，ログイン
 router.get("/", homeController.getHome);
-router.get("/test", homeController.testFunction);
-router.get("/create", userController.isAdmin, (req, res) => res.render("create"));
-router.post("/create", userController.create);
 router.get("/login", (req, res) => res.render("login"));
 router.post("/login", userController.authenticate);
 router.get("/logout", userController.logout);
-router.get("/summary", homeController.getSummary);
-router.get("/record", homeController.getRecord);
+//Record関連
+router.get("/record/:id", homeController.getRecord);
 router.get("/register",  homeController.getRegister);
 router.post("/register", homeController.postRegister);
-router.get("/record/edit", userController.isLoggedin, homeController.getEdit);
-router.post("/record/edit", userController.isLoggedin, homeController.postEdit);
-router.post("/record/delete", userController.isLoggedin, homeController.delete);
+router.get("/record/:id/edit", userController.isLoggedin, homeController.getEdit);
+router.post("/record/:id/edit", userController.isLoggedin, homeController.postEdit);
+router.post("/record/:id/delete", userController.isLoggedin, homeController.delete);
+//管理者用
+router.get("/users", userController.isAdmin, userController.getUsers);
+router.get("/users/create", userController.isAdmin, (req, res) => res.render("create"));
+router.post("/users/create", userController.isAdmin, userController.create);
+router.get("/users/:id", userController.isAdmin, userController.getUserDetail);
+router.get("/summary", homeController.getSummary);
 
 router.get("/initialize", userController.initialize);
+router.get("/test", homeController.testFunction);
 
 //エラー処理
 app.use(errorController.respondNoResourceFound);

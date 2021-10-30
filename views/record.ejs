@@ -51,9 +51,9 @@
     <div class="itemv"><%= record.crm %></div>
     <div class="itemvl"><%= record.c_comment %></div>
 </div>
-<form action="/record/edit" method="GET">
-    <button type="submit" name="id" value="<%= record._id %>">編集</button>
+<form action="/record/<%= record._id %>/edit" method="GET">
+    <button type="submit">編集</button>
 </form>
-<form action="/record/delete" method="POST" onsubmit="return check()">
+<form action="/record/<%= record._id %>/delete" method="POST" onsubmit="return check()">
     <button type="submit" name="id" value="<%= record._id %>">削除</button>
 </form>

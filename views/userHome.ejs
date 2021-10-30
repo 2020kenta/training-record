@@ -1,35 +1,32 @@
-<h1>Training Record Summary</h1>
+<h1>ユーザー情報</h1>
 
 <div class="contents">
     <div class="item">所属</div>
-    <div class="itemv"><%= group %></div>
+    <div class="itemv"><%= user.group %></div>
 </div>
 <div class="contents">
     <div class="item">ID</div>
-    <div class="itemv"><%= id %></div>
+    <div class="itemv"><%= user.id %></div>
 </div>
 <div class="contents">
     <div class="item">氏名</div>
-    <div class="itemv"><%= kname %></div>
+    <div class="itemv"><%= user.fullName() %></div>
 </div>
-<div class="contents">
-    <div class="item">課程</div>
-    <div class="itemv"><%= phase %></div>
-</div>
-<div>　</div>
+<div> </div>
+
 <table>
     <tr>
-        <th class ="tableth">Record No</th>
         <th class ="tableth">Date</th>
+        <th class ="tableth">Phase</th>
         <th class ="tableth">総合評価</th>
         <th class ="tableth">操作技術</th>
         <th class ="tableth">知識</th>
         <th class ="tableth">CRM</th>
     </tr>
-    <% record.forEach(r => { %>
+    <% records.forEach(r => { %>
         <tr>
-            <td class="tabletd"><%= r.rec_id %></td>
             <td class="tabletd"><%= r.date %></td>
+            <td class="tabletd"><%= r.phase %></td>
             <td class="tabletd"><%= r.g_grade %></td>
             <td class="tabletd"><%= r.technical %></td>
             <td class="tabletd"><%= r.knowledge %></td>
@@ -44,11 +41,3 @@
         </tr>
     <% }); %>
 </table>
-<form action="/register" method="GET">
-    <input type="hidden" name="id" value="<%= id %>">
-    <input type="hidden" name="phase" value="<%= phase %>">
-    <input type="hidden" name="rec_id" value="<%= newNumber %>">
-    <button type="submit">追加</button>
-</form>
-
-</div>

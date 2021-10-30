@@ -1,0 +1,17 @@
+<h1>ユーザー一覧</h1>
+<table>
+    <tr>
+        <th class="tableth">ID</th>
+        <th class="tableth">氏名</th>
+        <th class="tableth">Group</th>
+    </tr>
+    <% users.forEach(user => { %>
+    <tr>
+        <td class="tabletd"><%= user.id %></td>
+        <td class="tabletd"><%= user.fullName() %></td>
+        <td class="tabletd"><%= user.group %></td>
+        <td><a href="/users/<%= user._id %>">詳細</a></td>
+    </tr>
+    <% }) %>
+</table>
+<a href="/users/create">新規登録</a>

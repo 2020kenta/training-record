@@ -28,6 +28,30 @@ exports.initialize = (req, res) => {
     res.send("初期化しました");
 }
 
+exports.getUsers = (req, res) => {
+    Person.find()
+    .then(users => {
+        res.render("users", {
+            users: users
+        });
+    })
+    .catch(err => {
+        res.render("error", {
+            message: err
+        });
+    });
+}
+
+exports.getUserDetail = (req, res) => {
+    const userId = req.params.id
+    Person.findById(userId)
+    .then(user => {
+        console.log(user);
+        res.send(user);
+    })
+    .catch(err => console.log(err));
+}
+
 //新規ユーザー作成
 exports.create = (req, res, next) => {
     if(req.skip) next();

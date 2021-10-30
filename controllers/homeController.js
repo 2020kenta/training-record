@@ -11,7 +11,35 @@ exports.testFunction = (req, res, next) => {
 }
 //トップページへのGEt
 exports.getHome = (req,res) => {
-    res.render("index");
+    if(!req.isAuthenticated()) {
+        res.redirect("/login");
+    } else {
+        switch (req.user.group) {
+            case "Admin":
+                res.render("adminHome");
+                break;
+        
+            case "HONDA":
+                Record.find({instructor: req.user})
+                .then(records => {
+                    res.render("userHome", {
+                        user: req.user,
+                        records: records
+                    });
+                })
+                break;
+            
+            default:
+                Record.find({trainee: req.user})
+                .then(records => {
+                    res.render("userHome", {
+                        user: req.user,
+                        records: records
+                    });
+                })
+                break;
+        }
+    }
 }
 
 //SummaryページへのGET
@@ -64,7 +92,7 @@ exports.getRecord = (req, res) => {
     /* let detail = records.find(function(element) {
         return (element["trainee_id"] === formData.id && element["phase"] === formData.phase && element["rec_id"] === formData.rec_id);
     }) */
-    Record.findById(req.query.id)
+    Record.findById(req.params.id)
         .populate("trainee")
         .populate("instructor")
         .then(record => {
@@ -128,7 +156,7 @@ exports.postRegister = (req, res) => {
 }
 
 exports.getEdit = (req, res) => {
-    Record.findById(req.query.id)
+    Record.findById(req.params.id)
     .then(record => {
         res.render("edit", {
             record: record
@@ -158,7 +186,7 @@ exports.postEdit = (req, res) => {
     Record.findByIdAndUpdate(recordId, {
         $set: newData
     }).then(record => {
-        res.redirect(`/record?id=${record._id}`)
+        res.redirect(`/record/${record._id}`)
     }).catch(error => {
         res.send(error);
     });

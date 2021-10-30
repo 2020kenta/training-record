@@ -1,5 +1,5 @@
 <h1>Training Record</h1>
-<form action="/record/edit" method="POST">
+<form action="/record/<%= record._id %>/edit" method="POST">
     <div class="contents">
         <div class="item">ID</div>
         <div class="itemv"><%= record.trainee_id %></div>
