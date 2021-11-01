@@ -31,8 +31,11 @@ exports.initialize = (req, res) => {
 exports.getUsers = (req, res) => {
     Person.find()
     .then(users => {
+        const sortedUsers = users.sort((a, b) => {
+            return (a.id < b.id) ? -1 : 1;
+        })
         res.render("users", {
-            users: users
+            users: sortedUsers
         });
     })
     .catch(err => {
@@ -106,6 +109,20 @@ exports.isAdmin= (req, res, next) => {
             next();
         } else {
             res.redirect("/login");
+        }
+    } else {
+        res.redirect("/login");
+    }
+}
+
+exports.isInst = (req, res, next) => {
+    if (req.isAuthenticated()) {
+        if (req.user.group === "HONDA" || req.user.group === "Admin") {
+            next();
+        } else {
+            res.render("error", {
+                message: "権限がありません。"
+            })
         }
     } else {
         res.redirect("/login");

@@ -1,10 +1,12 @@
 const mongoose = require("mongoose");
 
 const recordSchema = mongoose.Schema({
-    trainee_id: {
-        type: String,
+    trainee: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Person",
         required: true
     },
+    instructor: {type: mongoose.Schema.Types.ObjectId, ref: "Person"},
     phase: String,
     rec_id: {
         type: Number,
@@ -14,20 +16,13 @@ const recordSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    inst_id: String,
     g_grade: String,
     technical: String,
     knowledge: String,
     crm: String,
     t_comment: String,
     k_comment: String,
-    c_comment: String,
-    trainee: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Person",
-        required: true
-    },
-    instructor: {type: mongoose.Schema.Types.ObjectId, ref: "Person"}
+    c_comment: String
 });
 
 module.exports = mongoose.model("Record", recordSchema);

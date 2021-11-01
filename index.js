@@ -1,3 +1,4 @@
+const dbUrl = "mongodb+srv://dozono:0512kenta20@cluster0.uyhrf.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 //モジュール
 const express = require("express");
 const layouts = require("express-ejs-layouts");
@@ -16,9 +17,7 @@ const Person = require("./models/person");
 
 //mongoDBの初期設定
 mongoose.connect(
-    "mongodb+srv://dozono:0512kenta20@cluster0.uyhrf.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
-    //localの場合
-    //"mongodb://localhost:27017/sample_db",
+    dbUrl,
     {useNewUrlParser: true}
 ).then(() => console.log("MongoDB connected"))
  .catch(err => console.log(err));
@@ -75,15 +74,15 @@ router.get("/login", (req, res) => res.render("login"));
 router.post("/login", userController.authenticate);
 router.get("/logout", userController.logout);
 //Record関連
+router.get("/record/create",userController.isInst, homeController.getCreateRecord)
+router.post("/record/create",userController.isInst, homeController.postCreateRecord)
 router.get("/record/:id", homeController.getRecord);
-router.get("/register",  homeController.getRegister);
-router.post("/register", homeController.postRegister);
-router.get("/record/:id/edit", userController.isLoggedin, homeController.getEdit);
-router.post("/record/:id/edit", userController.isLoggedin, homeController.postEdit);
-router.post("/record/:id/delete", userController.isLoggedin, homeController.delete);
+router.get("/record/:id/edit",userController.isInst,  homeController.getEditRecord);
+router.post("/record/:id/edit", userController.isInst, homeController.postEditRecord);
+router.post("/record/:id/delete", userController.isInst, homeController.delete);
 //管理者用
 router.get("/users", userController.isAdmin, userController.getUsers);
-router.get("/users/create", userController.isAdmin, (req, res) => res.render("create"));
+router.get("/users/create", userController.isAdmin, (req, res) => res.render("createUser"));
 router.post("/users/create", userController.isAdmin, userController.create);
 router.get("/users/:id", userController.isAdmin, userController.getUserDetail);
 router.get("/summary", homeController.getSummary);

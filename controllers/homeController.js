@@ -22,9 +22,12 @@ exports.getHome = (req,res) => {
             case "HONDA":
                 Record.find({instructor: req.user})
                 .then(records => {
+                    const sortedRecords = records.sort((a, b) => {
+                        return (a.date > b.date) ? -1 : 1;
+                    })
                     res.render("userHome", {
                         user: req.user,
-                        records: records
+                        records: sortedRecords 
                     });
                 })
                 break;
@@ -32,9 +35,12 @@ exports.getHome = (req,res) => {
             default:
                 Record.find({trainee: req.user})
                 .then(records => {
+                    const sortedRecords = records.sort((a, b) => {
+                        return (a.date > b.date) ? -1 : 1;
+                    })
                     res.render("userHome", {
                         user: req.user,
-                        records: records
+                        records: sortedRecords 
                     });
                 })
                 break;
@@ -59,20 +65,12 @@ exports.getSummary = (req, res) => {
             records = r;
         })
         .then(() => {
-            //データを新規作成する時のために次の番号を決めておく
-            let newNumber;
-            if (records.length > 0) {
-                newNumber = records[records.length-1].rec_id - 0 + 1;
-            } else {
-                newNumber = 1;
-            }
             res.render("summary", {
                 group: trainee.group,
                 id: trainee.id,
                 kname: trainee.fullName(),
                 phase: formData.phase,
                 record: records,
-                newNumber: newNumber
             });
         })
         .catch(err => {
@@ -89,9 +87,6 @@ exports.getSummary = (req, res) => {
 }
 
 exports.getRecord = (req, res) => {
-    /* let detail = records.find(function(element) {
-        return (element["trainee_id"] === formData.id && element["phase"] === formData.phase && element["rec_id"] === formData.rec_id);
-    }) */
     Record.findById(req.params.id)
         .populate("trainee")
         .populate("instructor")
@@ -105,18 +100,14 @@ exports.getRecord = (req, res) => {
         });
 };
 
-exports.getRegister = (req, res) => {
-    res.render("register",{
-        trainee_id: req.query.id,
-        phase: req.query.phase,
-        rec_id: req.query.rec_id
-    });
+exports.getCreateRecord= (req, res) => {
+    res.render("createRecord");
 };
 
-exports.postRegister = (req, res) => {
+exports.postCreateRecord = (req, res) => {
     let trainee, instructor;
     Promise.all([
-        Person.findOne({id: req.body.id})
+        Person.findOne({id: req.body.trainee_id})
         .then(person => {
             trainee = person
         }),
@@ -126,39 +117,57 @@ exports.postRegister = (req, res) => {
         })
     ])
     .then(() => {
-        Record.create({
-            trainee_id: req.body.id,
-            phase: req.body.phase,
-            rec_id: req.body.rec_id - 0,
-            date: req.body.date,
-            inst_id: req.body.inst_id,
-            g_grade: req.body.g_grade,
-            technical: req.body.technical,
-            knowledge: req.body.knowledge,
-            crm: req.body.crm,
-            t_comment: req.body.t_comment,
-            k_comment: req.body.k_comment,
-            c_comment: req.body.c_comment,
-            trainee: trainee,
-            instructor: instructor
+        //新しいrec_idを決定
+        let rec_id;
+        Record.find({phase: req.body.phase, trainee: trainee._id})
+        .then(records => {
+            switch (records.length) {
+                case 0:
+                    rec_id = 1;
+                    break;
+                case 1:
+                    rec_id = 2;
+                    break;
+                default:
+                    const sortedRecords = records.sort((a, b) => {
+                        return (a.rec_id > b.rec_id) ? -1 : 1;
+                    });
+                    rec_id = sortedRecords[0].rec_id - 0 + 1;
+                    break;
+            }
+            console.log(rec_id);
+        })
+        //新規保存
+        .then(() => {
+            Record.create({
+                phase: req.body.phase,
+                rec_id: rec_id,
+                date: req.body.date,
+                g_grade: req.body.g_grade,
+                technical: req.body.technical,
+                knowledge: req.body.knowledge,
+                crm: req.body.crm,
+                t_comment: req.body.t_comment,
+                k_comment: req.body.k_comment,
+                c_comment: req.body.c_comment,
+                trainee: trainee,
+                instructor: instructor
+            });
+        })
+        .then(() => {
+            res.redirect("/")
         });
     })
-    .catch( err => {
-        console.log(err);
-        newRecord.save((error,result) => {
-            if(error) res.send(error);
-        })
-    })
-    .then(() => {
-        res.redirect(`/summary?id=${req.body.id}&phase=${req.body.phase}`);
-    });
-    
 }
 
-exports.getEdit = (req, res) => {
+
+
+exports.getEditRecord = (req, res) => {
     Record.findById(req.params.id)
+    .populate("trainee")
+    .populate("instructor")
     .then(record => {
-        res.render("edit", {
+        res.render("editRecord", {
             record: record
         });
     }).catch(error => {
@@ -167,14 +176,12 @@ exports.getEdit = (req, res) => {
     });
 }
 
-exports.postEdit = (req, res) => {
+exports.postEditRecord = (req, res) => {
     let recordId = req.body.id;
     let newData = {
-        trainee_id: req.body.trainee_id,
         phase: req.body.phase,
         rec_id: req.body.rec_id - 0,
         date: req.body.date,
-        inst_id: req.body.inst_id,
         g_grade: req.body.g_grade,
         technical: req.body.technical,
         knowledge: req.body.knowledge,
@@ -195,7 +202,7 @@ exports.postEdit = (req, res) => {
 exports.delete = (req, res) => {
     Record.findByIdAndRemove(req.body.id)
         .then(r => {
-            res.redirect(`/summary?id=${r.trainee_id}&phase=${r.phase}`);
+            res.redirect("/");
         })
         .catch(error => res.send(error));
 }

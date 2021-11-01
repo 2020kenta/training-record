@@ -1,20 +1,19 @@
-<h1>Training Record Register</h1>
-<form action="/register" method="POST">
-    <input type="hidden" name="id" value="<%= trainee_id %>">
+<h1>Training Record 新規作成</h1>
+<form action="/record/create" method="POST">
     <div class="contents">
-        <div class="item">ID</div>
-        <div class="itemv"><%= trainee_id %></div>
+        <div class="item">Trainee ID</div>
+        <div class="itemv">
+            <input type="text" name="trainee_id" pattern="[0-9]{4}" required>
+        </div>
     </div>
-    <input type="hidden" name="phase" value="<%= phase %>">
     <div class="contents">
         <div class="item">課程</div>
-        <div class="itemv"><%= phase %></div>
-    </div>
-    <div class="contents">
-        <div class="item">Record No.</div>
         <div class="itemv">
-            <input type="hidden" name="rec_id" value="<%= rec_id %>">
-            <%= rec_id %>
+            <select name="phase">
+                <option value="CP1">CP1</option>
+                <option value="CP2">CP2</option>
+                <option value="INST1">INST1</option>
+            </select>
         </div>
     </div>
     <div class="contents">
@@ -26,7 +25,12 @@
     <div class="contents">
         <div class="item">INST ID</div>
         <div class="itemv">
-            <input type="text" name="inst_id" required>
+            <% if(currentUser.group === "Admin"){ %>
+            <input type="text" name="inst_id" pattern="[0-9]{4}" required>
+            <% } else { %>
+            <input type="hidden" name="inst_id" value="<%= currentUser.id %>">
+            <%= currentUser.id %>
+            <% } %>
         </div>
     </div>
     <div class="contents">

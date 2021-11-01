@@ -44,10 +44,7 @@
         </tr>
     <% }); %>
 </table>
-<form action="/register" method="GET">
-    <input type="hidden" name="id" value="<%= id %>">
-    <input type="hidden" name="phase" value="<%= phase %>">
-    <input type="hidden" name="rec_id" value="<%= newNumber %>">
+<form action="/record/create" method="GET">
     <button type="submit">追加</button>
 </form>
 

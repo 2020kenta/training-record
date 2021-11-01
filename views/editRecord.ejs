@@ -1,9 +1,9 @@
 <h1>Training Record</h1>
 <form action="/record/<%= record._id %>/edit" method="POST">
     <div class="contents">
-        <div class="item">ID</div>
-        <div class="itemv"><%= record.trainee_id %></div>
-        <input type="hidden" name="trainee_id" value="<%= record.trainee_id %>">
+        <div class="item">Trainee ID</div>
+        <div class="itemv"><%= record.trainee.id %></div>
+        <input type="hidden" name="trainee_id" value="<%= record.trainee._id %>">
     </div>
     <div class="contents">
         <div class="item">課程</div>
@@ -25,8 +25,8 @@
     <div>　</div>
     <div class="contents">
         <div class="item">INSTRUCTOR ID</div>
-        <div class="itemv"><%= record.inst_id %></div>
-        <input type="hidden" name="inst_id" value="<%= record.inst_id %>">
+        <div class="itemv"><%= record.instructor.id %></div>
+        <input type="hidden" name="inst_id" value="<%= record.instructor._id %>">
     </div>
     <div>　</div>
     <div class="contents">
