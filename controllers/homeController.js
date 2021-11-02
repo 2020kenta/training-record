@@ -48,6 +48,39 @@ exports.getHome = (req,res) => {
     }
 }
 
+//ユーザー詳細ページ
+exports.getUserDetail = (req, res) => {
+    const userId = req.params.id
+    Person.findById(userId)
+    .then(user => {
+        if (user.group === "HONDA") {
+            Record.find({instructor: user})
+            .then(records => {
+                const sortedRecords = records.sort((a, b) => {
+                    return (a.date > b.date) ? -1 : 1;
+                })
+                res.render("userDetail", {
+                    user: user,
+                    records: sortedRecords 
+                })
+            })
+        } else {
+            Record.find({trainee: user})
+            .then(records => {
+                const sortedRecords = records.sort((a, b) => {
+                    return (a.date > b.date) ? -1 : 1;
+                })
+                res.render("userDetail", {
+                    user: user,
+                    records: sortedRecords 
+                })
+            })
+        }
+    })
+    .catch(err => console.log(err));
+}
+
+
 //SummaryページへのGET
 exports.getSummary = (req, res) => {
     //フォームデータを取得

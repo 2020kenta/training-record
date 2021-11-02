@@ -8,9 +8,8 @@
     <% users.forEach(user => { %>
     <tr>
         <td class="tabletd"><%= user.id %></td>
-        <td class="tabletd"><%= user.fullName() %></td>
+        <td class="tabletd"><a href="/users/<%= user._id %>"><%= user.fullName() %></a></td>
         <td class="tabletd"><%= user.group %></td>
-        <td><a href="/users/<%= user._id %>">詳細</a></td>
     </tr>
     <% }) %>
 </table>

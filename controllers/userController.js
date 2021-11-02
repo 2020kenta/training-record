@@ -45,16 +45,6 @@ exports.getUsers = (req, res) => {
     });
 }
 
-exports.getUserDetail = (req, res) => {
-    const userId = req.params.id
-    Person.findById(userId)
-    .then(user => {
-        console.log(user);
-        res.send(user);
-    })
-    .catch(err => console.log(err));
-}
-
 //新規ユーザー作成
 exports.create = (req, res, next) => {
     if(req.skip) next();

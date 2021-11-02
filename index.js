@@ -84,7 +84,7 @@ router.post("/record/:id/delete", userController.isInst, homeController.delete);
 router.get("/users", userController.isAdmin, userController.getUsers);
 router.get("/users/create", userController.isAdmin, (req, res) => res.render("createUser"));
 router.post("/users/create", userController.isAdmin, userController.create);
-router.get("/users/:id", userController.isAdmin, userController.getUserDetail);
+router.get("/users/:id", userController.isAdmin, homeController.getUserDetail);
 router.get("/summary", homeController.getSummary);
 
 router.get("/initialize", userController.initialize);
