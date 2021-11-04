@@ -16,12 +16,12 @@
     <div class="item">メールアドレス</div>
     <div class="itemv"><%= user.email %></div>
 </div>
-<div class="contents">
-    <div class="item">誕生日</div>
-    <div class="itemv"><%= user.birth %></div>
-</div>
 <div> </div>
 
+<% if(currentUser.group === "Admin" || currentUser.group === "HONDA"){ %>
+<% if(!(user.group === "Admin" || user.group === "HONDA")){ %>
+    <a href="/record/<%= user._id %>/create">新規作成</a>
+<% } %>
 <table>
     <tr>
         <th class ="tableth">Date</th>
@@ -49,3 +49,4 @@
         </tr>
     <% }); %>
 </table>
+<% } %>

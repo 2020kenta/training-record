@@ -2,29 +2,49 @@
 
 <div class="contents">
     <div class="item">所属</div>
-    <div class="itemv"><%= user.group %></div>
+    <div class="itemv"><%= currentUser.group %></div>
 </div>
 <div class="contents">
     <div class="item">ID</div>
-    <div class="itemv"><%= user.id %></div>
+    <div class="itemv"><%= currentUser.id %></div>
 </div>
 <div class="contents">
     <div class="item">氏名</div>
-    <div class="itemv"><%= user.fullName() %></div>
+    <div class="itemv"><%= currentUser.fullName() %></div>
 </div>
 <div class="contents">
     <div class="item">メールアドレス</div>
-    <div class="itemv"><%= user.email %></div>
+    <div class="itemv"><%= currentUser.email %></div>
 </div>
 <div class="contents">
     <div class="item">誕生日</div>
-    <div class="itemv"><%= user.birth %></div>
+    <div class="itemv"><%= currentUser.birth %></div>
 </div>
 <div> </div>
 
-<% if(user.group === "HONDA") { %>
-    <div><a href="/record/create">新規作成</a></div>
-<% } %>
+<h2>訓練生検索</h2>
+<form action="/users/search" method="get">
+    <div class="contents">
+        <div class="item">Group</div>
+        <div class="itemv">
+            <select name="" id=""></select>
+        </div>
+    </div>
+    <div class="contents">
+        <div class="item">氏名</div>
+        <div class="itemv">
+            <select name="trainee">
+                <% users.forEach(user => {
+                    if(!(user.group === "Admin" || user.group === "HONDA")){ %>>
+                        <option value="<%= user._id %>"><%= user.fullName() %></option>
+                <% }}) %>
+            </select>
+        </div>
+    </div>
+    <button type="submit">検索</button>
+</form>
+
+<h2>最近作成した記録</h2>
 <table>
     <tr>
         <th class ="tableth">Date</th>

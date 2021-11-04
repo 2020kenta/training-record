@@ -8,6 +8,13 @@ const record = require("../models/record");
 
 //実験用関数
 exports.testFunction = (req, res, next) => {
+    const form = req.query;
+    const re = form.re
+    res.send(req.query.re);
+    console.log(typeof form);
+    console.log(typeof re);
+    const r = JSON.parse(re);
+    console.log(r);
 }
 //トップページへのGEt
 exports.getHome = (req,res) => {
@@ -20,16 +27,27 @@ exports.getHome = (req,res) => {
                 break;
         
             case "HONDA":
-                Record.find({instructor: req.user})
-                .then(records => {
-                    const sortedRecords = records.sort((a, b) => {
-                        return (a.date > b.date) ? -1 : 1;
+                let users, records
+                Promise.all([
+                    Person.find()
+                    .then(r => {
+                        users = r.sort((a, b) => {
+                            return (a.id < b.id) ? -1 : 1;
+                        });
+                    }),
+                    Record.find({instructor: req.user})
+                    .then(r => {
+                        records = r.sort((a, b) => {
+                            return (a.date > b.date) ? -1 : 1;
+                        });
                     })
-                    res.render("userHome", {
-                        user: req.user,
-                        records: sortedRecords 
+                ])
+                .then(() => {
+                    res.render("instHome", {
+                        users: users,
+                        records: records 
                     });
-                })
+                });
                 break;
             
             default:
@@ -119,8 +137,9 @@ exports.getSummary = (req, res) => {
     });
 }
 
+
 exports.getRecord = (req, res) => {
-    Record.findById(req.params.id)
+    Record.findById(req.params.recordId)
         .populate("trainee")
         .populate("instructor")
         .then(record => {
@@ -134,13 +153,23 @@ exports.getRecord = (req, res) => {
 };
 
 exports.getCreateRecord= (req, res) => {
-    res.render("createRecord");
+    Person.findById(req.params.userId)
+    .then(trainee => {
+        res.render("createRecord", {
+            trainee: trainee
+        });
+    })
+    .catch(err => {
+        res.render("error", {
+            message: err
+        });
+    });
 };
 
 exports.postCreateRecord = (req, res) => {
     let trainee, instructor;
     Promise.all([
-        Person.findOne({id: req.body.trainee_id})
+        Person.findById(req.body.trainee_id)
         .then(person => {
             trainee = person
         }),
@@ -196,7 +225,7 @@ exports.postCreateRecord = (req, res) => {
 
 
 exports.getEditRecord = (req, res) => {
-    Record.findById(req.params.id)
+    Record.findById(req.params.recordId)
     .populate("trainee")
     .populate("instructor")
     .then(record => {
@@ -233,7 +262,7 @@ exports.postEditRecord = (req, res) => {
 }
 
 exports.delete = (req, res) => {
-    Record.findByIdAndRemove(req.body.id)
+    Record.findByIdAndRemove(req.body.recordId)
         .then(r => {
             res.redirect("/");
         })

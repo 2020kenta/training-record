@@ -74,17 +74,18 @@ router.get("/login", (req, res) => res.render("login"));
 router.post("/login", userController.authenticate);
 router.get("/logout", userController.logout);
 //Record関連
-router.get("/record/create",userController.isInst, homeController.getCreateRecord)
-router.post("/record/create",userController.isInst, homeController.postCreateRecord)
-router.get("/record/:id", homeController.getRecord);
-router.get("/record/:id/edit",userController.isInst,  homeController.getEditRecord);
-router.post("/record/:id/edit", userController.isInst, homeController.postEditRecord);
-router.post("/record/:id/delete", userController.isInst, homeController.delete);
+router.get("/record/:userId/create",userController.isInst, homeController.getCreateRecord)
+router.post("/record/:userId/create",userController.isInst, homeController.postCreateRecord)
+router.get("/record/:recordId", homeController.getRecord);
+router.get("/record/:recordId/edit",userController.isInst,  homeController.getEditRecord);
+router.post("/record/:recordId/edit", userController.isInst, homeController.postEditRecord);
+router.post("/record/:recordId/delete", userController.isInst, homeController.delete);
 //管理者用
 router.get("/users", userController.isAdmin, userController.getUsers);
+router.get("/users/search", (req,res) => res.redirect(`/users/${req.query.trainee}`))
 router.get("/users/create", userController.isAdmin, (req, res) => res.render("createUser"));
 router.post("/users/create", userController.isAdmin, userController.create);
-router.get("/users/:id", userController.isAdmin, homeController.getUserDetail);
+router.get("/users/:id", homeController.getUserDetail);
 router.get("/summary", homeController.getSummary);
 
 router.get("/initialize", userController.initialize);

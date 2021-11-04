@@ -1,9 +1,21 @@
 <h1>Training Record 新規作成</h1>
-<form action="/record/create" method="POST">
+<form action="/record/<%= trainee._id %>/create" method="POST">
     <div class="contents">
-        <div class="item">Trainee ID</div>
+        <div class="item">Trainee</div>
         <div class="itemv">
-            <input type="text" name="trainee_id" pattern="[0-9]{4}" required>
+            <input type="hidden" name="trainee_id" value="<%= trainee._id %>">
+            <%= trainee.fullName() %>
+        </div>
+    </div>
+    <div class="contents">
+        <div class="item">Instructor</div>
+        <div class="itemv">
+            <% if(currentUser.group === "Admin"){ %>
+            <input type="text" name="inst_id" pattern="[0-9]{4}" required>
+            <% } else { %>
+            <input type="hidden" name="inst_id" value="<%= currentUser.id %>">
+            <%= currentUser.fullName() %>
+            <% } %>
         </div>
     </div>
     <div class="contents">
@@ -20,17 +32,6 @@
         <div class="item">DATE</div>
         <div class="itemv">
             <input type="date" name="date" required>
-        </div>
-    </div>
-    <div class="contents">
-        <div class="item">INST ID</div>
-        <div class="itemv">
-            <% if(currentUser.group === "Admin"){ %>
-            <input type="text" name="inst_id" pattern="[0-9]{4}" required>
-            <% } else { %>
-            <input type="hidden" name="inst_id" value="<%= currentUser.id %>">
-            <%= currentUser.id %>
-            <% } %>
         </div>
     </div>
     <div class="contents">

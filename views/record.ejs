@@ -10,7 +10,9 @@
 </div>
 <div class="contents">
     <div class="item">氏名</div>
-    <div class="itemv"><%= record.trainee.ksname + record.trainee.kgname %></div>
+    <div class="itemv">
+        <a href="/users/<%= record.trainee._id %>"><%= record.trainee.ksname + record.trainee.kgname %></a>
+    </div>
 </div>
 <div class="contents">
     <div class="item">課程</div>
@@ -28,7 +30,9 @@
 <div>　</div>
 <div class="contents">
     <div class="item">INSTRUCTOR</div>
-    <div class="itemv"><%= record.instructor.ksname + record.instructor.kgname %></div>
+    <div class="itemv">
+        <a href="/users/<%= record.instructor._id %>"><%= record.instructor.ksname + record.instructor.kgname %></a>
+    </div>
 </div>
 <div>　</div>
 <div class="contents">
@@ -51,9 +55,11 @@
     <div class="itemv"><%= record.crm %></div>
     <div class="itemvl"><%= record.c_comment %></div>
 </div>
+<% if(currentUser.group === "Admin" || currentUser.group === "HONDA"){ %>
 <form action="/record/<%= record._id %>/edit" method="GET">
     <button type="submit">編集</button>
 </form>
 <form action="/record/<%= record._id %>/delete" method="POST" onsubmit="return check()">
     <button type="submit" name="id" value="<%= record._id %>">削除</button>
 </form>
+<% } %>
