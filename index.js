@@ -1,4 +1,4 @@
-const dbUrl = "mongodb+srv://dozono:0512kenta20@cluster0.uyhrf.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+
 //モジュール
 const express = require("express");
 const layouts = require("express-ejs-layouts");
