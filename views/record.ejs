@@ -60,6 +60,17 @@
     <button type="submit">編集</button>
 </form>
 <form action="/record/<%= record._id %>/delete" method="POST" onsubmit="return check()">
-    <button type="submit" name="id" value="<%= record._id %>">削除</button>
+    <button type="submit">削除</button>
 </form>
 <% } %>
+
+<script>
+    function check() {
+        if (window.confirm("本当に削除しますか?")) {
+            return true;
+        } else {
+            window.alert("キャンセルしました。");
+            return false;
+        }
+    }
+</script>

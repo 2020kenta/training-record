@@ -23,20 +23,24 @@
 <div> </div>
 
 <h2>訓練生検索</h2>
-<form action="/users/search" method="get">
+<form action="/users/search" method="get" id="app">
     <div class="contents">
         <div class="item">Group</div>
         <div class="itemv">
-            <select name="" id=""></select>
+            <select v-model="select">
+                <option>Peach01</option>
+                <option>ANA01</option>
+            </select>
         </div>
     </div>
     <div class="contents">
         <div class="item">氏名</div>
         <div class="itemv">
             <select name="trainee">
+                <option hidden>選択してください</option>
                 <% users.forEach(user => {
                     if(!(user.group === "Admin" || user.group === "HONDA")){ %>>
-                        <option value="<%= user._id %>"><%= user.fullName() %></option>
+                        <option value="<%= user._id %>" v-if="select==='<%= user.group %>'"><%= user.fullName() %></option>
                 <% }}) %>
             </select>
         </div>
@@ -72,3 +76,13 @@
         </tr>
     <% }); %>
 </table>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+<script>
+    const app = new Vue({
+        el: "#app",
+        data: {
+            select:"Peach01"
+        }
+    });
+</script>

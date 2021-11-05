@@ -98,7 +98,9 @@ exports.isAdmin= (req, res, next) => {
         if (req.user.group === "Admin") {
             next();
         } else {
-            res.redirect("/login");
+            res.render("error", {
+                message: "権限がありません。"
+            })
         }
     } else {
         res.redirect("/login");

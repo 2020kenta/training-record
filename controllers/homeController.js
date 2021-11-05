@@ -262,7 +262,7 @@ exports.postEditRecord = (req, res) => {
 }
 
 exports.delete = (req, res) => {
-    Record.findByIdAndRemove(req.body.recordId)
+    Record.findByIdAndRemove(req.params.recordId)
         .then(r => {
             res.redirect("/");
         })
