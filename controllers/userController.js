@@ -75,6 +75,7 @@ exports.create = (req, res, next) => {
 //ログイン
 exports.authenticate = passport.authenticate("local", {
     failureRedirect: "/login",
+    failureFlash: "ログインできませんでした。",
     successRedirect: "/"
 });
 

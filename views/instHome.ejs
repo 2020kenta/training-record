@@ -23,11 +23,12 @@
 <div> </div>
 
 <h2>訓練生検索</h2>
-<form action="/users/search" method="get" id="app">
+<form action="/users/search" method="get" id="app1">
     <div class="contents">
         <div class="item">Group</div>
         <div class="itemv">
             <select v-model="select">
+                <option hidden>選択してください</option>
                 <option>Peach01</option>
                 <option>ANA01</option>
             </select>
@@ -37,7 +38,7 @@
         <div class="item">氏名</div>
         <div class="itemv">
             <select name="trainee">
-                <option hidden>選択してください</option>
+                <option value="" hidden>選択してください</option>
                 <% users.forEach(user => {
                     if(!(user.group === "Admin" || user.group === "HONDA")){ %>>
                         <option value="<%= user._id %>" v-if="select==='<%= user.group %>'"><%= user.fullName() %></option>
@@ -49,6 +50,7 @@
 </form>
 
 <h2>最近作成した記録</h2>
+<div id="app2">
 <table>
     <tr>
         <th class ="tableth">Date</th>
@@ -58,31 +60,69 @@
         <th class ="tableth">知識</th>
         <th class ="tableth">CRM</th>
     </tr>
-    <% records.forEach(r => { %>
+    <% for(let i=0;i<=4;i++){ %>
+        <% if(records[i]){ %>
         <tr>
-            <td class="tabletd"><%= r.date %></td>
-            <td class="tabletd"><%= r.phase %></td>
-            <td class="tabletd"><%= r.g_grade %></td>
-            <td class="tabletd"><%= r.technical %></td>
-            <td class="tabletd"><%= r.knowledge %></td>
-            <td class="tabletd"><%= r.crm %></td>
+            <td class="tabletd"><%= records[i].date %></td>
+            <td class="tabletd"><%= records[i].phase %></td>
+            <td class="tabletd"><%= records[i].g_grade %></td>
+            <td class="tabletd"><%= records[i].technical %></td>
+            <td class="tabletd"><%= records[i].knowledge %></td>
+            <td class="tabletd"><%= records[i].crm %></td>
             <td>
-                <form action="/record/<%= r._id %>" method="GET">
+                <form action="/record/<%= records[i]._id %>" method="GET">
                     <button type="submit" >
                         詳細
                     </button>
                 </form>
             </td>
         </tr>
-    <% }); %>
+    <% }}; %>
+    <% for(let i=5;i<records.length;i++){ %>
+        <% if(records[i]){ %>
+        <tr v-if="more">
+            <td class="tabletd"><%= records[i].date %></td>
+            <td class="tabletd"><%= records[i].phase %></td>
+            <td class="tabletd"><%= records[i].g_grade %></td>
+            <td class="tabletd"><%= records[i].technical %></td>
+            <td class="tabletd"><%= records[i].knowledge %></td>
+            <td class="tabletd"><%= records[i].crm %></td>
+            <td>
+                <form action="/record/<%= records[i]._id %>" method="GET">
+                    <button type="submit" >
+                        詳細
+                    </button>
+                </form>
+            </td>
+        </tr>
+    <% }}; %>
 </table>
+<button @click="showAll">{{ button }}</button>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
 <script>
-    const app = new Vue({
-        el: "#app",
+    const app1 = new Vue({
+        el: "#app1",
         data: {
-            select:"Peach01"
+            select:"選択してください"
         }
     });
+    const app2 = new Vue({
+        el: "#app2",
+        data:{
+            button: "すべて表示する",
+            more:false
+        },
+        methods:{
+            showAll: function () {
+                this.more = !this.more;
+                if (this.button === "すべて表示する") {
+                    this.button = "最近5件のみ表示する";
+                } else {
+                    this.button = "すべて表示する";
+                }
+            }
+        }
+    })
 </script>

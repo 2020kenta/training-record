@@ -1,4 +1,4 @@
-
+const dbUrl = "mongodb+srv://dozono:0512kenta20@cluster0.uyhrf.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 //モジュール
 const express = require("express");
 const layouts = require("express-ejs-layouts");
@@ -64,6 +64,7 @@ passport.deserializeUser(Person.deserializeUser());
 router.use((req, res, next) => {
     res.locals.loggedIn = req.isAuthenticated();
     res.locals.currentUser = req.user;
+    res.locals.flashMessages = req.flash();
     next();
 });
 
@@ -82,7 +83,7 @@ router.post("/record/:recordId/edit", userController.isInst, homeController.post
 router.post("/record/:recordId/delete", userController.isInst, homeController.delete);
 //管理者用
 router.get("/users", userController.isAdmin, userController.getUsers);
-router.get("/users/search", (req,res) => res.redirect(`/users/${req.query.trainee}`))
+router.get("/users/search", homeController.searchUser)
 router.get("/users/create", userController.isAdmin, (req, res) => res.render("createUser"));
 router.post("/users/create", userController.isAdmin, userController.create);
 router.get("/users/:id", homeController.getUserDetail);

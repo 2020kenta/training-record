@@ -8,18 +8,11 @@ const record = require("../models/record");
 
 //実験用関数
 exports.testFunction = (req, res, next) => {
-    const form = req.query;
-    const re = form.re
-    res.send(req.query.re);
-    console.log(typeof form);
-    console.log(typeof re);
-    const r = JSON.parse(re);
-    console.log(r);
 }
 //トップページへのGEt
 exports.getHome = (req,res) => {
     if(!req.isAuthenticated()) {
-        res.redirect("/login");
+        res.render("login");
     } else {
         switch (req.user.group) {
             case "Admin":
@@ -63,6 +56,14 @@ exports.getHome = (req,res) => {
                 })
                 break;
         }
+    }
+}
+exports.searchUser = (req, res) => {
+    if (req.query.trainee) {
+        res.redirect(`/users/${req.query.trainee}`);
+    } else {
+        req.flash("error", "訓練生を選択してください。")
+        res.redirect("/")
     }
 }
 

@@ -53,6 +53,9 @@
             background-color: #EEEEEE;
             color: black;
         }
+        .flash {
+            color: red;
+        }
     </style>
 </head>
 <body>
@@ -66,6 +69,9 @@
             <a href="/login">ログイン</a>
         <% } %>
     </div>
+    <% if(flashMessages){ %>
+        <div class="flash"><%= flashMessages.error %></div>
+    <% } %>
     <%- body %>
 
 </body>
