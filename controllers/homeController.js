@@ -11,23 +11,32 @@ exports.testFunction = (req, res, next) => {
 }
 //トップページへのGEt
 exports.getHome = (req,res) => {
+    //ログインしていなければログインページへ
     if(!req.isAuthenticated()) {
         res.render("login");
     } else {
+        //管理者、教官、訓練生で別々のホームページへ
         switch (req.user.group) {
             case "Admin":
-                res.render("adminHome");
+                Person.find()
+                .then(users => {
+                    res.render("adminHome", {
+                        users: users
+                    });
+                })
                 break;
         
             case "HONDA":
                 let users, records
                 Promise.all([
+                    //検索用に訓練生一覧を取得
                     Person.find()
                     .then(r => {
                         users = r.sort((a, b) => {
                             return (a.id < b.id) ? -1 : 1;
                         });
                     }),
+                    //ユーザーが書いた記録を取得、新しい順
                     Record.find({instructor: req.user})
                     .then(r => {
                         records = r.sort((a, b) => {
@@ -44,6 +53,7 @@ exports.getHome = (req,res) => {
                 break;
             
             default:
+                //自分の記録を取得、新しい順
                 Record.find({trainee: req.user})
                 .then(records => {
                     const sortedRecords = records.sort((a, b) => {
@@ -58,9 +68,12 @@ exports.getHome = (req,res) => {
         }
     }
 }
+
+//教官が訓練生検索した時の処理
 exports.searchUser = (req, res) => {
     if (req.query.trainee) {
         res.redirect(`/users/${req.query.trainee}`);
+    //フォームが入力されていなければ元のページへ
     } else {
         req.flash("error", "訓練生を選択してください。")
         res.redirect("/")
@@ -99,46 +112,7 @@ exports.getUserDetail = (req, res) => {
     .catch(err => console.log(err));
 }
 
-
-//SummaryページへのGET
-exports.getSummary = (req, res) => {
-    //フォームデータを取得
-    let formData = req.query;
-    let trainee, records;
-
-    //リクエストに沿った個人データを検索
-    Person.findOne({id: formData.id})
-    .then(person => {
-        trainee = person;
-    })
-    .then(r => {
-        Record.find({trainee: trainee, phase: formData.phase})
-        .then(r => {
-            records = r;
-        })
-        .then(() => {
-            res.render("summary", {
-                group: trainee.group,
-                id: trainee.id,
-                kname: trainee.fullName(),
-                phase: formData.phase,
-                record: records,
-            });
-        })
-        .catch(err => {
-            res.render("error", {
-                message: err
-            });
-        });
-    })
-    .catch(err => {
-        res.render("error", {
-            message: err
-        });
-    });
-}
-
-
+//Record詳細ページ
 exports.getRecord = (req, res) => {
     Record.findById(req.params.recordId)
         .populate("trainee")
@@ -153,6 +127,7 @@ exports.getRecord = (req, res) => {
         });
 };
 
+//Record新規作成ページ
 exports.getCreateRecord= (req, res) => {
     Person.findById(req.params.userId)
     .then(trainee => {
@@ -167,6 +142,7 @@ exports.getCreateRecord= (req, res) => {
     });
 };
 
+//Recordを新規作成する処理
 exports.postCreateRecord = (req, res) => {
     let trainee, instructor;
     Promise.all([
@@ -184,12 +160,13 @@ exports.postCreateRecord = (req, res) => {
         let rec_id;
         Record.find({phase: req.body.phase, trainee: trainee._id})
         .then(records => {
+            //rec_idがそれまでの最新+1になるように
             switch (records.length) {
                 case 0:
                     rec_id = 1;
                     break;
                 case 1:
-                    rec_id = 2;
+                    rec_id = records[0].rec_id -0 + 1;
                     break;
                 default:
                     const sortedRecords = records.sort((a, b) => {
@@ -198,7 +175,6 @@ exports.postCreateRecord = (req, res) => {
                     rec_id = sortedRecords[0].rec_id - 0 + 1;
                     break;
             }
-            console.log(rec_id);
         })
         //新規保存
         .then(() => {
@@ -223,8 +199,7 @@ exports.postCreateRecord = (req, res) => {
     })
 }
 
-
-
+//既存のRecord編集ページへ
 exports.getEditRecord = (req, res) => {
     Record.findById(req.params.recordId)
     .populate("trainee")
@@ -239,6 +214,7 @@ exports.getEditRecord = (req, res) => {
     });
 }
 
+//Record編集処理
 exports.postEditRecord = (req, res) => {
     let recordId = req.body.id;
     let newData = {
@@ -262,6 +238,7 @@ exports.postEditRecord = (req, res) => {
     });
 }
 
+//Record削除
 exports.delete = (req, res) => {
     Record.findByIdAndRemove(req.params.recordId)
         .then(r => {

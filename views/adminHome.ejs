@@ -3,25 +3,39 @@
     <a href="/users">ユーザー一覧</a>
 </div>
 
-<h2>Record検索</h2>
-<form class="contents" method="GET" action="/summary">
+<h2>訓練生検索</h2>
+<form action="/users/search" method="get" id="app1">
     <div class="contents">
-        <div class="item">ID</div>
+        <div class="item">Group</div>
         <div class="itemv">
-            <input type="text" name="id" pattern="[0-9]{4}" />
-        </div>
-    </div>
-    <div class="contents">
-        <div class="item">課程</div>
-        <div class="itemv">
-            <select name="phase">
-                <option value="CP1">CP1</option>
-                <option value="CP2">CP2</option>
-                <option value="INST1">INST1</option>
+            <select v-model="select">
+                <option hidden>選択してください</option>
+                <option>Peach01</option>
+                <option>ANA01</option>
             </select>
         </div>
     </div>
-    <div class="search_button">
-        <input type="submit" value="検索">
+    <div class="contents">
+        <div class="item">氏名</div>
+        <div class="itemv">
+            <select name="trainee">
+                <option value="" hidden>選択してください</option>
+                <% users.forEach(user => {
+                    if(!(user.group === "Admin" || user.group === "HONDA")){ %>>
+                        <option value="<%= user._id %>" v-if="select==='<%= user.group %>'"><%= user.fullName() %></option>
+                <% }}) %>
+            </select>
+        </div>
     </div>
+    <button type="submit">検索</button>
 </form>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+<script>
+    const app1 = new Vue({
+        el: "#app1",
+        data: {
+            select:"選択してください"
+        }
+    });
+</script>

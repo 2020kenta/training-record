@@ -31,7 +31,7 @@
     <div class="contents">
         <div class="item">DATE</div>
         <div class="itemv">
-            <input type="date" name="date" required>
+            <input type="date" name="date" id="date" required>
         </div>
     </div>
     <div class="contents">
@@ -69,3 +69,10 @@
     </div>
     <button type="submit">登録</button>
 </form>
+<script>
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = ("0" + (date.getMonth() + 1)).slice(-2);
+    const day = ("0" + date.getDate()).slice(-2);
+    document.getElementById("date").value = year + "-" + month + "-" + day;
+</script>

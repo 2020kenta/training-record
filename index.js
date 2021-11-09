@@ -60,7 +60,7 @@ passport.use(Person.createStrategy());
 passport.serializeUser(Person.serializeUser());
 passport.deserializeUser(Person.deserializeUser());
 
-//ログインしているかチェック
+//ログインしているかチェック、フラッシュメッセージを利用可能に
 router.use((req, res, next) => {
     res.locals.loggedIn = req.isAuthenticated();
     res.locals.currentUser = req.user;
@@ -81,16 +81,16 @@ router.get("/record/:recordId", homeController.getRecord);
 router.get("/record/:recordId/edit",userController.isInst,  homeController.getEditRecord);
 router.post("/record/:recordId/edit", userController.isInst, homeController.postEditRecord);
 router.post("/record/:recordId/delete", userController.isInst, homeController.delete);
-//管理者用
+//ユーザー関連
 router.get("/users", userController.isAdmin, userController.getUsers);
 router.get("/users/search", homeController.searchUser)
 router.get("/users/create", userController.isAdmin, (req, res) => res.render("createUser"));
 router.post("/users/create", userController.isAdmin, userController.create);
 router.get("/users/:id", homeController.getUserDetail);
-router.get("/summary", homeController.getSummary);
 
-router.get("/initialize", userController.initialize);
-router.get("/test", homeController.testFunction);
+
+router.get("/initialize", userController.isAdmin, userController.initialize);
+router.get("/test", userController.isAdmin, homeController.testFunction);
 
 //エラー処理
 app.use(errorController.respondNoResourceFound);

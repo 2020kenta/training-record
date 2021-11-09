@@ -28,6 +28,7 @@ exports.initialize = (req, res) => {
     res.send("初期化しました");
 }
 
+//全ユーザーの情報を取得（管理者用）
 exports.getUsers = (req, res) => {
     Person.find()
     .then(users => {
@@ -94,6 +95,7 @@ exports.isLoggedin = (req, res, next) => {
     }
 }
 
+//管理者かどうかチェック
 exports.isAdmin= (req, res, next) => {
     if (req.isAuthenticated()) {
         if (req.user.group === "Admin") {
@@ -108,6 +110,7 @@ exports.isAdmin= (req, res, next) => {
     }
 }
 
+//教官以上の権限かチェック
 exports.isInst = (req, res, next) => {
     if (req.isAuthenticated()) {
         if (req.user.group === "HONDA" || req.user.group === "Admin") {
