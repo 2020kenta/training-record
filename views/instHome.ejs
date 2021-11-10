@@ -23,7 +23,7 @@
 <div> </div>
 
 <h2>訓練生検索</h2>
-<form action="/users/search" method="get" id="app1">
+<form action="/users/search" method="get" id="searchUsers">
     <div class="contents">
         <div class="item">Group</div>
         <div class="itemv">
@@ -50,7 +50,7 @@
 </form>
 
 <h2>最近作成した記録</h2>
-<div id="app2">
+<div id="showAll">
 <table>
     <tr>
         <th class ="tableth">Date</th>
@@ -97,18 +97,12 @@
         </tr>
     <% }}; %>
 </table>
-<button @click="showAll">{{ button }}</button>
+<button @click="show">{{ button }}</button>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+<script src="https://unpkg.com/vue@next"></script>
 <script>
-    const app1 = new Vue({
-        el: "#app1",
-        data: {
-            select:"選択してください"
-        }
-    });
-    const app2 = new Vue({
+    /* const app2 = new Vue({
         el: "#app2",
         data:{
             button: "すべて表示する",
@@ -124,5 +118,34 @@
                 }
             }
         }
-    })
+    }) */
+    const SearchUsers = {
+        data() {
+            return {
+                select: "選択してください",
+                test: "テスト"
+            }
+        }
+    };
+    Vue.createApp(SearchUsers).mount("#searchUsers");
+
+    const ShowAll = {
+        data() {
+            return{
+                button: "すべて表示する",
+                more:false
+            }
+        },
+        methods: {
+            show() {
+                this.more = !this.more;
+                if (this.button === "すべて表示する") {
+                    this.button = "最近5件のみ表示する";
+                } else {
+                    this.button = "すべて表示する";
+                }
+            }
+        }
+    };
+    Vue.createApp(ShowAll).mount("#showAll");
 </script>
