@@ -46,10 +46,11 @@ router.use(cookieParser("secretRecord2021"));
 router.use(expressSession({
     secret: "secretRecord2021",
     cookie: {
-        maxAge: 40000000
+        maxAge: 30*60*1000 // 30分で自動ログアウト
     },
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    rolling: true
 }));
 router.use(connectFlash());
 
@@ -77,16 +78,17 @@ router.get("/logout", userController.logout);
 //Record関連
 router.get("/record/:userId/create",userController.isInst, homeController.getCreateRecord)
 router.post("/record/:userId/create",userController.isInst, homeController.postCreateRecord)
-router.get("/record/:recordId", homeController.getRecord);
+router.get("/record/:recordId",userController.isLoggedin, homeController.getRecord);
 router.get("/record/:recordId/edit",userController.isInst,  homeController.getEditRecord);
 router.post("/record/:recordId/edit", userController.isInst, homeController.postEditRecord);
 router.post("/record/:recordId/delete", userController.isInst, homeController.delete);
+router.post("/record/:recordId/editable", userController.isAdmin, homeController.editable);
 //ユーザー関連
 router.get("/users", userController.isAdmin, userController.getUsers);
 router.get("/users/search", homeController.searchUser)
 router.get("/users/create", userController.isAdmin, (req, res) => res.render("createUser"));
 router.post("/users/create", userController.isAdmin, userController.create);
-router.get("/users/:id", homeController.getUserDetail);
+router.get("/users/:id",userController.isLoggedin, homeController.getUserDetail);
 
 
 router.get("/initialize", userController.isAdmin, userController.initialize);

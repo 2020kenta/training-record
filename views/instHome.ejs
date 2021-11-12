@@ -48,27 +48,49 @@
     </div>
     <button type="submit">検索</button>
 </form>
+<h2>未確定の記録</h2>
+<table>
+    <tr>
+        <th class ="tableth">日付</th>
+        <th class ="tableth">所属</th>
+        <th class ="tableth">氏名</th>
+        <th class ="tableth">Phase</th>
+        <th class ="tableth">総合評価</th>
+    </tr>
+    <% records.forEach(r => { %>
+        <% if(r.edit){ %>
+            <tr>
+                <td class="tabletd"><%= r.date %></td>
+                <td class="tabletd"><%= r.trainee.group %></td>
+                <td class="tabletd"><%= r.trainee.ksname + r.trainee.kgname %></td>
+                <td class="tabletd"><%= r.phase %></td>
+                <td class="tabletd"><%= r.g_grade %></td>
+                <td>
+                    <a href="/record/<%= r._id %>/edit"><button>編集</button></a>
+                </td>
+            </tr>
+        <% } %>
+    <% }) %>
+</table>
 
 <h2>最近作成した記録</h2>
 <div id="showAll">
 <table>
     <tr>
-        <th class ="tableth">Date</th>
+        <th class ="tableth">日付</th>
+        <th class ="tableth">所属</th>
+        <th class ="tableth">氏名</th>
         <th class ="tableth">Phase</th>
         <th class ="tableth">総合評価</th>
-        <th class ="tableth">操作技術</th>
-        <th class ="tableth">知識</th>
-        <th class ="tableth">CRM</th>
     </tr>
     <% for(let i=0;i<=4;i++){ %>
         <% if(records[i]){ %>
         <tr>
             <td class="tabletd"><%= records[i].date %></td>
-            <td class="tabletd"><%= records[i].phase %></td>
-            <td class="tabletd"><%= records[i].g_grade %></td>
-            <td class="tabletd"><%= records[i].technical %></td>
-            <td class="tabletd"><%= records[i].knowledge %></td>
-            <td class="tabletd"><%= records[i].crm %></td>
+            <td class="tabletd"><%= records[i].trainee.group%></td>
+            <td class="tabletd"><%= records[i].trainee.ksname + records[i].trainee.kgname %></td>
+            <td class="tabletd"><%= records[i].phase%></td>
+            <td class="tabletd"><%= records[i].g_grade%></td>
             <td>
                 <form action="/record/<%= records[i]._id %>" method="GET">
                     <button type="submit" >
@@ -82,11 +104,10 @@
         <% if(records[i]){ %>
         <tr v-if="more">
             <td class="tabletd"><%= records[i].date %></td>
-            <td class="tabletd"><%= records[i].phase %></td>
-            <td class="tabletd"><%= records[i].g_grade %></td>
-            <td class="tabletd"><%= records[i].technical %></td>
-            <td class="tabletd"><%= records[i].knowledge %></td>
-            <td class="tabletd"><%= records[i].crm %></td>
+            <td class="tabletd"><%= records[i].trainee.group%></td>
+            <td class="tabletd"><%= records[i].trainee.ksname + records[i].trainee.kgname %></td>
+            <td class="tabletd"><%= records[i].phase%></td>
+            <td class="tabletd"><%= records[i].g_grade%></td>
             <td>
                 <form action="/record/<%= records[i]._id %>" method="GET">
                     <button type="submit" >
@@ -102,28 +123,10 @@
 
 <script src="https://unpkg.com/vue@next"></script>
 <script>
-    /* const app2 = new Vue({
-        el: "#app2",
-        data:{
-            button: "すべて表示する",
-            more:false
-        },
-        methods:{
-            showAll: function () {
-                this.more = !this.more;
-                if (this.button === "すべて表示する") {
-                    this.button = "最近5件のみ表示する";
-                } else {
-                    this.button = "すべて表示する";
-                }
-            }
-        }
-    }) */
     const SearchUsers = {
         data() {
             return {
                 select: "選択してください",
-                test: "テスト"
             }
         }
     };

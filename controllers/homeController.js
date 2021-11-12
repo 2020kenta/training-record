@@ -38,9 +38,10 @@ exports.getHome = (req,res) => {
                     }),
                     //ユーザーが書いた記録を取得、新しい順
                     Record.find({instructor: req.user})
+                    .populate("trainee")
                     .then(r => {
                         records = r.sort((a, b) => {
-                            return (a.date > b.date) ? -1 : 1;
+                            return (a.date < b.date) ? 1 : -1;
                         });
                     })
                 ])
@@ -57,7 +58,7 @@ exports.getHome = (req,res) => {
                 Record.find({trainee: req.user})
                 .then(records => {
                     const sortedRecords = records.sort((a, b) => {
-                        return (a.date > b.date) ? -1 : 1;
+                        return (a.date < b.date) ? 1 : -1;
                     })
                     res.render("userHome", {
                         user: req.user,
@@ -179,6 +180,8 @@ exports.postCreateRecord = (req, res) => {
         //新規保存
         .then(() => {
             Record.create({
+                trainee: trainee,
+                instructor: instructor,
                 phase: req.body.phase,
                 rec_id: rec_id,
                 date: req.body.date,
@@ -189,8 +192,7 @@ exports.postCreateRecord = (req, res) => {
                 t_comment: req.body.t_comment,
                 k_comment: req.body.k_comment,
                 c_comment: req.body.c_comment,
-                trainee: trainee,
-                instructor: instructor
+                edit: Boolean(req.body.edit)
             });
         })
         .then(() => {
@@ -216,7 +218,7 @@ exports.getEditRecord = (req, res) => {
 
 //Record編集処理
 exports.postEditRecord = (req, res) => {
-    let recordId = req.body.id;
+    let recordId = req.params.recordId;
     let newData = {
         phase: req.body.phase,
         rec_id: req.body.rec_id - 0,
@@ -227,7 +229,8 @@ exports.postEditRecord = (req, res) => {
         crm: req.body.crm,
         t_comment: req.body.t_comment,
         k_comment: req.body.k_comment,
-        c_comment: req.body.c_comment
+        c_comment: req.body.c_comment,
+        edit: Boolean(req.body.edit)
     };
     Record.findByIdAndUpdate(recordId, {
         $set: newData
@@ -245,4 +248,15 @@ exports.delete = (req, res) => {
             res.redirect("/");
         })
         .catch(error => res.send(error));
+}
+
+exports.editable = (req, res) => {
+    Record.findByIdAndUpdate(req.params.recordId, {
+        $set: {
+            edit: true
+        }
+    })
+    .then(record => {
+        res.redirect(`/record/${record._id}`)
+    });
 }

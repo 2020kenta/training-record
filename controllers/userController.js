@@ -91,6 +91,7 @@ exports.isLoggedin = (req, res, next) => {
     if (req.isAuthenticated()) {
         next();
     } else {
+        req.flash("error", "ログインしてください。")
         res.redirect("/login");
     }
 }
@@ -121,6 +122,7 @@ exports.isInst = (req, res, next) => {
             })
         }
     } else {
-        res.redirect("/login");
+        req.flash("error", "権限がありません。");
+        res.redirect("/");
     }
 }

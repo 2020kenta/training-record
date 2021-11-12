@@ -22,7 +22,8 @@ const recordSchema = mongoose.Schema({
     crm: String,
     t_comment: String,
     k_comment: String,
-    c_comment: String
+    c_comment: String,
+    edit: Boolean
 });
 
 module.exports = mongoose.model("Record", recordSchema);

@@ -56,12 +56,20 @@
     <div class="itemvl"><%= record.c_comment %></div>
 </div>
 <% if(currentUser.group === "Admin" || currentUser.group === "HONDA"){ %>
-<form action="/record/<%= record._id %>/edit" method="GET">
-    <button type="submit">編集</button>
-</form>
-<form action="/record/<%= record._id %>/delete" method="POST" onsubmit="return check()">
-    <button type="submit">削除</button>
-</form>
+    <% if(record.edit){ %>
+    <form action="/record/<%= record._id %>/edit" method="GET">
+        <button type="submit">編集</button>
+    </form>
+    <form action="/record/<%= record._id %>/delete" method="POST" onsubmit="return check()">
+        <button type="submit">削除</button>
+    </form>
+    <% }else { %>
+        <% if(currentUser.group === "Admin"){ %>
+            <form action="/record/<%= record._id %>/editable" method="post">
+                <button type="submit">編集可に変更</button>
+            </form>
+        <% } %>
+    <% } %>
 <% } %>
 
 <script>
