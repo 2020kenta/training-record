@@ -1,0 +1,40 @@
+<h1>ユーザー情報変更</h1>
+<h2>メールアドレス</h2>
+<form action="/users/<%= currentUser._id %>/changeemail" method="post">
+    <div class="contents">
+        <div class="item">現在のメールアドレス</div>
+        <div class="itemv">
+            <%= currentUser.email %>
+        </div>
+    </div>
+    <div class="contents">
+        <div class="item">新しいメールアドレス</div>
+        <div class="itemv">
+            <input type="email" name="newMail">
+        </div>
+    </div>
+    <button type="submit">メールアドレスを変更する</button>
+</form>
+
+<h2>パスワード</h2>
+<form action="/users/<%= currentUser._id %>/changepassword" method="post">
+    <div class="contents">
+        <div class="item">現在のパスワード</div>
+        <div class="itemv">
+            <input type="password" name="old">
+        </div>
+    </div>
+    <div class="contents">
+        <div class="item">新しいパスワード</div>
+        <div class="itemv">
+            <input type="password" name="new1">
+        </div>
+    </div>
+    <div class="contents">
+        <div class="item">新しいパスワード（確認）</div>
+        <div class="itemv">
+            <input type="password" name="new2">
+        </div>
+    </div>
+    <button type="submit">パスワードを変更する</button>
+</form>

@@ -4,6 +4,7 @@ const express = require("express");
 const layouts = require("express-ejs-layouts");
 const mongoose = require("mongoose");
 const passport = require("passport");
+const passportLocalMongoose = require("passport-local-mongoose");
 const cookieParser = require("cookie-parser");
 const expressSession = require("express-session");
 const connectFlash = require("connect-flash");
@@ -89,6 +90,8 @@ router.get("/users/search", homeController.searchUser)
 router.get("/users/create", userController.isAdmin, (req, res) => res.render("createUser"));
 router.post("/users/create", userController.isAdmin, userController.create);
 router.get("/users/:id",userController.isLoggedin, homeController.getUserDetail);
+router.get("/users/:userId/edit", (req, res) => res.render("editUser"));
+router.post("/users/:userId/changepassword", userController.changePassword);
 
 
 router.get("/initialize", userController.isAdmin, userController.initialize);

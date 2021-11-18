@@ -102,12 +102,12 @@ exports.isAdmin= (req, res, next) => {
         if (req.user.group === "Admin") {
             next();
         } else {
-            res.render("error", {
-                message: "権限がありません。"
-            })
+            req.flash("error", "権限がありません。");
+            res.redirect("/");
         }
     } else {
-        res.redirect("/login");
+        req.flash("error", "権限がありません。");
+        res.redirect("/");
     }
 }
 
@@ -117,12 +117,43 @@ exports.isInst = (req, res, next) => {
         if (req.user.group === "HONDA" || req.user.group === "Admin") {
             next();
         } else {
-            res.render("error", {
-                message: "権限がありません。"
-            })
+            req.flash("error", "権限がありません。");
+            res.redirect("/");
         }
     } else {
         req.flash("error", "権限がありません。");
         res.redirect("/");
+    }
+}
+
+exports.changeEmail = (req, res) => {
+    Person.findByIdAndUpdate(req.params.userId, {
+        email: req.body.newMail
+    })
+    .then(() => {
+        res.redirect("/");
+    })
+    .catch(err => {
+        req.flash("error", err.message);
+        res.redirect(`/users/${req.params.userId}/editUser`);
+    })
+}
+
+exports.changePassword = (req, res) =>{
+    if (req.body.new1 === req.body.new2) {
+        Person.findById(req.params.userId)
+        .then(user => {
+            user.changePassword(req.body.old, req.body.new1)
+            .then(() => {
+                res.redirect("/");
+            })
+            .catch(err => {
+                req.flash("error", "パスワードが違います。");
+                res.redirect(`/users/${req.params.userId}/editUser`);
+            })
+        })
+    } else {
+        req.flash("error", "新しいパスワードが一致していません。");
+        res.redirect(`/users/${req.params.userId}/editUser`);
     }
 }

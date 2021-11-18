@@ -19,34 +19,34 @@
 <div> </div>
 
 <% if(currentUser.group === "Admin" || currentUser.group === "HONDA"){ %>
-<% if(!(user.group === "Admin" || user.group === "HONDA")){ %>
-    <a href="/record/<%= user._id %>/create">新規作成</a>
-<% } %>
-<table>
-    <tr>
-        <th class ="tableth">Date</th>
-        <th class ="tableth">Phase</th>
-        <th class ="tableth">総合評価</th>
-        <th class ="tableth">操作技術</th>
-        <th class ="tableth">知識</th>
-        <th class ="tableth">CRM</th>
-    </tr>
-    <% records.forEach(r => { %>
+    <% if(!(user.group === "Admin" || user.group === "HONDA")){ %>
+        <a href="/record/<%= user._id %>/create">新規作成</a>
+    <% } %>
+    <table>
         <tr>
-            <td class="tabletd"><%= r.date %></td>
-            <td class="tabletd"><%= r.phase %></td>
-            <td class="tabletd"><%= r.g_grade %></td>
-            <td class="tabletd"><%= r.technical %></td>
-            <td class="tabletd"><%= r.knowledge %></td>
-            <td class="tabletd"><%= r.crm %></td>
-            <td>
-                <form action="/record/<%= r._id %>" method="GET">
-                    <button type="submit" >
-                        詳細
-                    </button>
-                </form>
-            </td>
+            <th class ="tableth">Date</th>
+            <th class ="tableth">Phase</th>
+            <th class ="tableth">総合評価</th>
+            <th class ="tableth">操作技術</th>
+            <th class ="tableth">知識</th>
+            <th class ="tableth">CRM</th>
         </tr>
-    <% }); %>
-</table>
+        <% records.forEach(r => { %>
+            <tr>
+                <td class="tabletd"><%= r.date %></td>
+                <td class="tabletd"><%= r.phase %></td>
+                <td class="tabletd"><%= r.g_grade %></td>
+                <td class="tabletd"><%= r.technical %></td>
+                <td class="tabletd"><%= r.knowledge %></td>
+                <td class="tabletd"><%= r.crm %></td>
+                <td>
+                    <form action="/record/<%= r._id %>" method="GET">
+                        <button type="submit" >
+                            詳細
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        <% }); %>
+    </table>
 <% } %>

@@ -55,7 +55,7 @@
     <div class="itemv"><%= record.crm %></div>
     <div class="itemvl"><%= record.c_comment %></div>
 </div>
-<% if(currentUser.group === "Admin" || currentUser.group === "HONDA"){ %>
+<% if(currentUser.group === "Admin" || currentUser.id === record.instructor.id ){ %>
     <% if(record.edit){ %>
     <form action="/record/<%= record._id %>/edit" method="GET">
         <button type="submit">編集</button>

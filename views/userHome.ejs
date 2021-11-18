@@ -20,11 +20,10 @@
     <div class="item">誕生日</div>
     <div class="itemv"><%= user.birth %></div>
 </div>
+<p><a href="/users/<%= currentUser._id %>/edit">ユーザー情報変更</a></p>
 <div> </div>
 
-<% if(user.group === "HONDA") { %>
-    <div><a href="/record/create">新規作成</a></div>
-<% } %>
+<h2>最近の記録</h2>
 <table>
     <tr>
         <th class ="tableth">Date</th>
