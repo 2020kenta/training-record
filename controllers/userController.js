@@ -76,7 +76,7 @@ exports.create = (req, res, next) => {
 //ログイン
 exports.authenticate = passport.authenticate("local", {
     failureRedirect: "/login",
-    failureFlash: "ログインできませんでした。",
+    failureFlash: "IDまたはパスワードが違います。",
     successRedirect: "/"
 });
 
@@ -126,20 +126,28 @@ exports.isInst = (req, res, next) => {
     }
 }
 
+//メールアドレス変更
 exports.changeEmail = (req, res) => {
-    Person.findByIdAndUpdate(req.params.userId, {
-        email: req.body.newMail
-    })
-    .then(() => {
-        res.redirect("/");
-    })
-    .catch(err => {
-        req.flash("error", err.message);
-        res.redirect(`/users/${req.params.userId}/editUser`);
-    })
+    if (req.body.newMail1 === req.body.newMail2) {
+        Person.findByIdAndUpdate(req.params.userId, {
+            email: req.body.newMail1
+        })
+        .then(() => {
+            res.redirect("/");
+        })
+        .catch(err => {
+            req.flash("error", err.message);
+            res.redirect(`/users/${req.params.userId}/edit`);
+        })
+    } else {
+        req.flash("error", "新しいメールアドレスが一致していません。");
+        res.redirect(`/users/${req.params.userId}/edit`);
+    }
 }
 
+//パスワード変更
 exports.changePassword = (req, res) =>{
+    //新しいパスワードが一致していなければやり直し
     if (req.body.new1 === req.body.new2) {
         Person.findById(req.params.userId)
         .then(user => {
@@ -149,11 +157,11 @@ exports.changePassword = (req, res) =>{
             })
             .catch(err => {
                 req.flash("error", "パスワードが違います。");
-                res.redirect(`/users/${req.params.userId}/editUser`);
+                res.redirect(`/users/${req.params.userId}/edit`);
             })
         })
     } else {
         req.flash("error", "新しいパスワードが一致していません。");
-        res.redirect(`/users/${req.params.userId}/editUser`);
+        res.redirect(`/users/${req.params.userId}/edit`);
     }
 }
