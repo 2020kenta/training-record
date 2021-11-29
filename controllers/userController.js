@@ -133,6 +133,7 @@ exports.changeEmail = (req, res) => {
             email: req.body.newMail1
         })
         .then(() => {
+            req.flash("success", "新しいメールアドレスを登録しました。")
             res.redirect("/");
         })
         .catch(err => {
@@ -153,6 +154,7 @@ exports.changePassword = (req, res) =>{
         .then(user => {
             user.changePassword(req.body.old, req.body.new1)
             .then(() => {
+                req.flash("success", "パスワードを変更しました。")
                 res.redirect("/");
             })
             .catch(err => {

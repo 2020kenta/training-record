@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Training Record</title>
     <style type="text/css">
         .contents {
             display: flex;
@@ -60,20 +60,37 @@
     </style>
 </head>
 <body>
-    <div class="nav">
-        <a href="/">home</a>
-        <% if(loggedIn) { %>
-            <span><%= currentUser.fullName() %>でログインしています</span>
-            <a href="/logout">ログアウト</a>
-        <%  } else { %>
-            <span>ログインしていません</span>
-            <a href="/login">ログイン</a>
+    <header>
+        <h1>Training Record</h1>
+        <div class="nav">
+            <a href="/">home</a>
+            <% if(loggedIn) { %>
+                <span><%= currentUser.fullName() %>でログインしています</span>
+                <a href="/logout">ログアウト</a>
+            <%  } else { %>
+                <span>ログインしていません</span>
+                <a href="/login">ログイン</a>
+            <% } %>
+        </div>
+    <!-- フラッシュメッセージがあれば表示 --> 
+        <% if(flashMessages){ %>
+            <% if (flashMessages.success){ %>
+                <div class="flash success"><%= flashMessages.success %></div>
+            <% } else if (flashMessages.error) {%>
+                <div class="flash error"><%= flashMessages.error %></div>
+            <% } %>
         <% } %>
-    </div>
-    <% if(flashMessages){ %>
-        <div class="flash"><%= flashMessages.error %></div>
-    <% } %>
-    <%- body %>
+    </header>
+
+    <main>
+        <%- body %>
+    </main>
+
+    <hr>
+
+    <footer>
+        <p>footer</p>
+    </footer>
 
 </body>
 </html>
